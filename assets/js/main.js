@@ -48,8 +48,6 @@ async function getMoneyDays() {
     console.log(data2_ten);
     console.log(data2_days);
 
-    // div_graph.innerHTML = `<canvas id="myChart"></canvas>`;
-
     const myChart = document.getElementById('myChart');
     new Chart(myChart, {
         type: 'line',
@@ -58,7 +56,7 @@ async function getMoneyDays() {
             datasets: [{
                 label: 'Historial últimos 10 días',
                 data: data2_ten.reverse(),
-                borderWidth: 1
+                borderWidth: 2
                 }]
             },
         options: {
