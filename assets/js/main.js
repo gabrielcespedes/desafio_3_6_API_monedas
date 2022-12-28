@@ -35,19 +35,22 @@ function moneyConvert() {
     getMoneyDays();    
 }
 
+let data2_ten = [];
+let data2_days = [];
 
 async function getMoneyDays() {
     const res2 = await fetch("https://mindicador.cl/api/"+list_money[select.value][0]);
     const data2 = await res2.json();
-    let data2_ten = [];
-    let data2_days = [];
+    
     for (i=1 ; i<=10; i++) {
         data2_ten.push(Number(data2.serie[i-1].valor));
         data2_days.push(data2.serie[i-1].fecha.split("T")[0].replace("2022-",""));
     }
-    console.log(data2_ten);
-    console.log(data2_days);
+    
+    renderGraph();
+}
 
+function renderGraph() {
     const myChart = document.getElementById('myChart');
     new Chart(myChart, {
         type: 'line',
@@ -67,14 +70,6 @@ async function getMoneyDays() {
                 }
             }
         })
-    // return {data2_days, data2_ten};
+    data2_ten = [];
+    data2_days = [];
 }
-
-// function renderGraph() {
-//     dataset = getMoneyDays();
-//     console.log(dataset);
-//     const myChart = document.getElementById('myChart');
-//     myChart.style.backgroundColor = "white";
-//     new Chart(myChart, {type : "line", dataset});
-// }
-
