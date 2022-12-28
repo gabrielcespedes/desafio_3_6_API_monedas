@@ -1,8 +1,9 @@
 let input = document.querySelector('input');
 let value_money = document.getElementById('value_money');
 let select = document.querySelector('select');
+let div_graph = document.getElementById('div_graph');
 
-let list_money = [["UF"],["Dólar"],["Euro"],["UTM"],["Bitcoin"]];
+let list_money = [["uf"],["dolar"],["euro"],["utm"],["bitcoin"]];
 
 async function getMoneyChanges() {
     const res = await fetch("https://mindicador.cl/api");
@@ -30,9 +31,52 @@ function moneyConvert() {
     } else {
         value_money.innerHTML = Number(input.value/list_money[select.value][1]).toFixed(2) + " " + list_money[select.value][0];
     }
-    graph();
+    div_graph.innerHTML = `<canvas id="myChart"></canvas>`;
+    getMoneyDays();    
 }
 
-function graph() {
-    console.log("Graficando");
+
+async function getMoneyDays() {
+    const res2 = await fetch("https://mindicador.cl/api/"+list_money[select.value][0]);
+    const data2 = await res2.json();
+    let data2_ten = [];
+    let data2_days = [];
+    for (i=1 ; i<=10; i++) {
+        data2_ten.push(Number(data2.serie[i-1].valor));
+        data2_days.push(data2.serie[i-1].fecha.split("T")[0].replace("2022-",""));
+    }
+    console.log(data2_ten);
+    console.log(data2_days);
+
+    // div_graph.innerHTML = `<canvas id="myChart"></canvas>`;
+
+    const myChart = document.getElementById('myChart');
+    new Chart(myChart, {
+        type: 'line',
+        data: {
+            labels: data2_days.reverse(),
+            datasets: [{
+                label: 'Historial últimos 10 días',
+                data: data2_ten.reverse(),
+                borderWidth: 1
+                }]
+            },
+        options: {
+            scales: {
+                y: {
+                beginAtZero: false
+                }
+                }
+            }
+        })
+    // return {data2_days, data2_ten};
 }
+
+// function renderGraph() {
+//     dataset = getMoneyDays();
+//     console.log(dataset);
+//     const myChart = document.getElementById('myChart');
+//     myChart.style.backgroundColor = "white";
+//     new Chart(myChart, {type : "line", dataset});
+// }
+
