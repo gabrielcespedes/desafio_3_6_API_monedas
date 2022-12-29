@@ -6,13 +6,18 @@ let div_graph = document.getElementById('div_graph');
 let list_money = [["uf"],["dolar"],["euro"],["utm"],["bitcoin"]];
 
 async function getMoneyChanges() {
-    const res = await fetch("https://mindicador.cl/api");
-    const data = await res.json();
-    list_money[0].push(Number(data.uf.valor));
-    list_money[1].push(Number(data.dolar.valor));
-    list_money[2].push(Number(data.euro.valor));
-    list_money[3].push(Number(data.utm.valor));
-    list_money[4].push(Number(data.bitcoin.valor));
+    try {
+        const res = await fetch("https://mindicador.cl/api");
+        const data = await res.json();
+        list_money[0].push(Number(data.uf.valor));
+        list_money[1].push(Number(data.dolar.valor));
+        list_money[2].push(Number(data.euro.valor));
+        list_money[3].push(Number(data.utm.valor));
+        list_money[4].push(Number(data.bitcoin.valor));
+    } catch(e) {
+        alert(e.message);
+    }
+    
 }
 
 getMoneyChanges();
@@ -39,15 +44,19 @@ let data2_ten = [];
 let data2_days = [];
 
 async function getMoneyDays() {
-    const res2 = await fetch("https://mindicador.cl/api/"+list_money[select.value][0]);
-    const data2 = await res2.json();
+    try {
+        const res2 = await fetch("https://mindicador.cl/api/"+list_money[select.value][0]);
+        const data2 = await res2.json();
     
-    for (i=1 ; i<=10; i++) {
-        data2_ten.push(Number(data2.serie[i-1].valor));
-        data2_days.push(data2.serie[i-1].fecha.split("T")[0].replace("2022-",""));
-    }
+        for (i=1 ; i<=10; i++) {
+            data2_ten.push(Number(data2.serie[i-1].valor));
+            data2_days.push(data2.serie[i-1].fecha.split("T")[0].replace("2022-",""));
+        }
     
-    renderGraph();
+        renderGraph();
+    } catch(e) {
+        alert(e.message);
+    }    
 }
 
 function renderGraph() {
